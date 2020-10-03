@@ -1,5 +1,6 @@
 ﻿using BookStore.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -20,6 +21,10 @@ namespace BookStore.Data
 
 
         public DbSet<OrderDetailTemp> OrderDetailsTemp { get; set; }
+
+
+        public DbSet<Category> Categories { get; set; }
+
 
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -45,6 +50,9 @@ namespace BookStore.Data
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
 
+
+            modelBuilder.Ignore<SelectListItem>();
+            modelBuilder.Ignore<SelectListGroup>();
 
 
             var cascadeFKs = modelBuilder.Model

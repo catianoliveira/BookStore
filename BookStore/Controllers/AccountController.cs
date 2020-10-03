@@ -38,10 +38,10 @@ namespace BookStore.Controllers
 
         public IActionResult Login()
         {
-            if (this.User.Identity.IsAuthenticated)
-            {
-                return this.RedirectToAction("Index", "Home");
-            }
+            //if (this.User.Identity.IsAuthenticated)
+            //{
+            //    return this.RedirectToAction("Index", "Home");
+            //}
 
             return this.View();
         }
@@ -54,22 +54,49 @@ namespace BookStore.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _userHelper.LoginAsync(model);
+
                 if (result.Succeeded)
                 {
-                    if (this.Request.Query.Keys.Contains("ReturnUrl"))
+                    if (this.Request.Query.Keys.Contains("ReturnURL"))
                     {
-                        //Direção de retorno
-                        return this.Redirect(this.Request.Query["ReturnUrl"].First());
+                        return this.Redirect(this.Request.Query["ReturnURL"].First());
                     }
 
                     return this.RedirectToAction("Index", "Home");
                 }
 
-            }
+                if (result.IsLockedOut)
+                {
+                    var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
+                        return this.View(model);
+                    }
 
-            this.ModelState.AddModelError(string.Empty, "Failed to login.");
-            return this.View(model);
+                    ModelState.AddModelError(string.Empty, "Your account is locked out, to reset your password click on the link sent to your email");
+
+                    var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+                    var link = this.Url.Action(
+                        "ResetPassword",
+                        "Account",
+                        new { token = myToken }, protocol: HttpContext.Request.Scheme);
+
+                    _mailHelper.SendMail(model.Username, "BookStore Password Reset", $"<h1>HighFly Password Reset</h1>" +
+                    $"To reset the password click in this link:</br></br>" +
+                    $"<a href = \"{link}\">Reset Password</a>");
+                }
+
+
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Incorrect username or password");
+                }
+            }
+            return View(model);
         }
+
 
 
         public async Task<IActionResult> Logout()
@@ -106,7 +133,9 @@ namespace BookStore.Controllers
                         Email = model.Username,
                         UserName = model.Username,
                         Address = model.Address,
-                        PhoneNumber = model.PhoneNumber
+                        PhoneNumber = model.PhoneNumber,
+                        City = model.City,
+                        CountryId = model.CountryId
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);

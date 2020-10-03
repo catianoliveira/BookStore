@@ -30,8 +30,19 @@ namespace BookStore.Data
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Customer");
 
+            if (!_context.Categories.Any())
+            {
+                AddCategories("Romance");
+                AddCategories("Poetry");
+                AddCategories("Children's");
+                AddCategories("Crime & Thriller");
+                AddCategories("Fiction");
+                AddCategories("Others");
+                await _context.SaveChangesAsync();
+            }
 
-            if (!_context.Countries.Any())
+
+                if (!_context.Countries.Any())
             {
                 CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
                 List<RegionInfo> countriesList = new List<RegionInfo>();
@@ -68,7 +79,9 @@ namespace BookStore.Data
                     Email = "catia-96@hotmail.com",
                     UserName = "catia-96@hotmail.com",
                     PhoneNumber = "123456",
-                    Address = "Rua da Luz"
+                    Address = "Rua da Luz",
+                    City = "Lisboa",
+                    CountryId = 179
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");
@@ -92,6 +105,15 @@ namespace BookStore.Data
                 }
             }
         }
+
+        private void AddCategories(string name)
+        {
+            _context.Categories.Add(new Category
+            {
+                Name = name
+            });
+        }
+
 
         private void AddCountries(string name)
         {

@@ -1,0 +1,34 @@
+﻿@model List<BookStore.Models.UserRoleViewModel>
+
+<table id="users" class="display table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.UserName</td>
+                <td>@string.Join(" , ", user.Roles.ToList())</td>
+                <td>
+                    <a class="btn btn-info pull-right" asp-action="EditUser" asp-route-id="@user.UserId"><i class="fa fa-user-edit"></i></a>
+                    <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@user.UserId" onclick="return confirm('Are you sure you want to delete @user.Name?')"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>

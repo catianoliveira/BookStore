@@ -77,7 +77,7 @@ namespace BookStore
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
-
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

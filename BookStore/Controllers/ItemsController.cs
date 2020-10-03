@@ -1,4 +1,5 @@
-﻿using BookStore.Data.Repositories;
+﻿using BookStore.Data.Entities;
+using BookStore.Data.Repositories;
 using BookStore.Helpers;
 using BookStore.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +15,21 @@ namespace BookStore.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly ICategoryRepository _categoryRepository;
 
         public ItemsController(
             IItemRepository itemRepository,
             IUserHelper userHelper,
             IImageHelper imageHelper,
-            IConverterHelper converterHelper)
+            IConverterHelper converterHelper,
+            ICategoryRepository categoryRepository)
         {
 
             _itemRepository = itemRepository;
             _userHelper = userHelper;
             _imageHelper = imageHelper;
             _converterHelper = converterHelper;
+            _categoryRepository = categoryRepository;
         }
 
 
@@ -58,7 +62,12 @@ namespace BookStore.Controllers
         //TODO [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            return View();
+            var model = new ItemViewModel
+            {
+                Categories = _categoryRepository.GetComboCategories()
+            };
+
+            return View(model);
         }
 
 
@@ -71,18 +80,19 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var path = string.Empty;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    path = await _imageHelper.UploadImageAsyc(model.ImageFile, "Items");
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "Items");
                 }
 
                 var product = _converterHelper.ToItem(model, path, true);
 
-                product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                product.User = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
                 await _itemRepository.CreateAsync(product);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -127,7 +137,7 @@ namespace BookStore.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        path = await _imageHelper.UploadImageAsyc(model.ImageFile, "Items");
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "Items");
                     }
 
                     var product = _converterHelper.ToItem(model, path, false);

@@ -10,6 +10,10 @@ namespace BookStore.Helpers
 {
     public interface IUserHelper
     {
+        Task AddUserToRoleAsync(User user, string roleName);
+
+
+
         Task<User> GetUserByEmailAsync(string email);
 
 

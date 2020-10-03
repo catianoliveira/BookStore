@@ -7,7 +7,7 @@ namespace BookStore.Helpers
 {
     public class ImageHelper : IImageHelper
     {
-        public async Task<string> UploadImageAsyc(IFormFile imageFile, string folder)
+        public async Task<string> UploadImageAsync(IFormFile imageFile, string folder)
         {
             var guid = Guid.NewGuid().ToString();
             var file = $"{guid}.jpg";
@@ -21,8 +21,7 @@ namespace BookStore.Helpers
             {
                 await imageFile.CopyToAsync(stream);
             }
-
-            return $"~/images/Items/{folder}";
+            return $"~/images/{folder}/{file}";
         }
     }
 }

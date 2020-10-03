@@ -1,99 +1,438 @@
-﻿<!DOCTYPE html>
-<html>
+﻿<
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BookStore</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
 </head>
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ShopCET46.Web</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Items" asp-action="Index">Items</a></li>
-                    <li><a asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
-                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                    {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a asp-area="" asp-controller="" asp-action="">Users</a></li>
-                                <li><a asp-area="" asp-controller="" asp-action="">Roles</a></li>
-                                <li><a asp-area="" asp-controller="Countries" asp-action="Index">Countries</a></li>
-                            </ul>
-                        </li>
-                    }
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
+<body class="hold-transition sidebar-mini layout-navbar-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-info navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="~/" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Home/Contact" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Home/About" class="nav-link">About</a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="~/Orders/Cart" class="nav-link"><i class="fa fa-shopping-basket"></i> Cart</a>
+                </li>
+
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="~/Account/Logout" class="nav-link">Logout</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="~/Account/Login" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="~/Account/Register" class="nav-link">Register</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar bg-light accent-info">
+            <!-- Brand Logo -->
+            <a href="/" class="brand-link elevation-4 bg-gradient-info">
+                <img src="~/images/logo2.png" alt="BookStore" class="brand-image img-circle elevation-3 bg-gradient-info" style="opacity: .8">
+                <span class=" font-weight-light text-light">BookStore</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar accent-info">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex ">
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <li><a asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a></li>
-                        <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                        <div class="info">
+                            <a href="~/Account/ChangeUser" class="d-block text-black-50">@User.Identity.Name</a>
+                        </div>
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <div class="info">
+
+                        </div>
                     }
-                </ul>
+
+                </div>
+
+
+
+                <!-- Sidebar Menu -->
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
+                  || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                {
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class
+                            with font-awesome or any other icon font library -->
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-copy"></i>
+                                    <p>
+                                        Users
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Account/Register" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Register new user</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Users
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateRole" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Create Role</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        Books
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Account/Register" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Available</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Not Available
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Items/Create" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Add new
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Purchases
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+                {
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class
+                            with font-awesome or any other icon font library -->
+                            <li class="nav-item">
+                                <a href="/Account/Register" class="nav-link">
+                                    <i class="nav-icon fas fa-edit"></i>
+                                    <p>
+                                        Register new Client
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        Books
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Account/Register" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Available</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Not Available
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Purchases
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Client"))
+                {
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class
+    with font-awesome or any other icon font library -->
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link active">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        My Account
+                                        <i class="fas fa-angle-left right"></i>
+                                        <span class="badge badge-info right">6</span>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Account/Register" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Purchases</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Update my information
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        Categories
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Account/Register" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Children's</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Crime & Thriller
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateRole" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Fiction</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Others
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Poetry
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateRole" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Romance</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Bestsellers
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+                @if (!this.User.Identity.IsAuthenticated)
+                {
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class
+                            with font-awesome or any other icon font library -->
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        Categories
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Account/Register" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Children's</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Crime & Thriller
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateRole" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Fiction</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Others
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/ListUsers" class="nav-link">
+                                            <i class="nav-icon far fa-address-book"></i>
+                                            <p>
+                                                Poetry
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateRole" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Romance</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Bestsellers
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+                <!-- /.sidebar-menu -->
             </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content">
+                <div class="container-fluid">
+                        <div class="col-12">
+                            <!-- Default box -->
+
+                            <div class="container body-content">
+                                @RenderBody()
+                                <hr />
+
+
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                </div>
+            </section>
+
+
         </div>
-    </nav>
+        <!-- /.content-wrapper -->
 
-    <partial name="_CookieConsentPartial" />
+        <footer class="main-footer">
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2020 - BookStore</p>
+            All rights reserved. &copy;BookStore 2020
         </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
     </div>
-
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
-
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/dist/js/demo.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

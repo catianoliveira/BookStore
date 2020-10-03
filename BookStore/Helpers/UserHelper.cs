@@ -24,7 +24,10 @@ namespace BookStore.Helpers
             _roleManager = roleManager;
         }
 
-
+        public async Task AddUserToRoleAsync(User user, string roleName)
+        {
+            await _userManager.AddToRoleAsync(user, roleName);
+        }
 
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {

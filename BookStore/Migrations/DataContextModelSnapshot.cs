@@ -19,6 +19,19 @@ namespace BookStore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("BookStore.Data.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("BookStore.Data.Entities.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -41,6 +54,8 @@ namespace BookStore.Migrations
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<int>("CategoryId");
 
                     b.Property<string>("ISBN")
                         .IsRequired();
@@ -144,10 +159,19 @@ namespace BookStore.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(70);
+
+                    b.Property<string>("City")
+                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<int>("CountryId");
+
+                    b.Property<DateTime>("DateOfBirth");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -155,10 +179,10 @@ namespace BookStore.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
-                        .HasMaxLength(50);
+                        .IsRequired();
 
                     b.Property<string>("LastName")
-                        .HasMaxLength(50);
+                        .IsRequired();
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -175,6 +199,8 @@ namespace BookStore.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("RoleId");
 
                     b.Property<string>("SecurityStamp");
 

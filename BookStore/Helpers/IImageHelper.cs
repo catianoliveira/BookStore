@@ -5,6 +5,6 @@ namespace BookStore.Helpers
 {
     public interface IImageHelper
     {
-        Task<string> UploadImageAsyc(IFormFile imageFile, string folder);
+        Task<string> UploadImageAsync(IFormFile imagefile, string folder);
     }
 }

@@ -24,10 +24,8 @@ namespace BookStore.Models
 
         [Display(Name = "City")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select a city")]
-        public int CityId { get; set; }
+        public string City { get; set; }
 
-
-        public IEnumerable<SelectListItem> Cities { get; set; }
 
 
         [Display(Name = "Country")]

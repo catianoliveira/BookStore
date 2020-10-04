@@ -39,5 +39,11 @@ namespace BookStore.Data.Repositories
 
             return list;
         }
+
+        public IQueryable GetAllInCategroy(int categoryId)
+        {
+            return _context.Categories
+                .Where(c => c.Id == categoryId);
+        }
     }
 }

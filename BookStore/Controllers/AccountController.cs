@@ -2,6 +2,7 @@
 using BookStore.Data.Repositories;
 using BookStore.Helpers;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,48 +22,65 @@ namespace BookStore.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
         private readonly IMailHelper _mailHelper;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public AccountController(
             ICountryRepository countryRepository,
             IUserHelper userHelper,
             IConfiguration configuration,
-            IMailHelper mailHelper)
+            IMailHelper mailHelper,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _countryRepository = countryRepository;
             _userHelper = userHelper;
             _configuration = configuration;
             _mailHelper = mailHelper;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
 
 
-        public IActionResult Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            //if (this.User.Identity.IsAuthenticated)
-            //{
-            //    return this.RedirectToAction("Index", "Home");
-            //}
+            LoginViewModel model = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins =
+                (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
 
-            return this.View();
+            return View(model);
         }
 
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            model.ExternalLogins =
+               (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+
             if (ModelState.IsValid)
             {
                 var result = await _userHelper.LoginAsync(model);
 
                 if (result.Succeeded)
                 {
-                    if (this.Request.Query.Keys.Contains("ReturnURL"))
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
-                        return this.Redirect(this.Request.Query["ReturnURL"].First());
+                        return Redirect(returnUrl);
                     }
-
-                    return this.RedirectToAction("Index", "Home");
+                    else
+                    {
+                        return RedirectToAction("index", "home");
+                    }
                 }
 
                 if (result.IsLockedOut)
@@ -110,11 +128,101 @@ namespace BookStore.Controllers
         {
             var model = new RegisterNewUserViewModel
             {
-                Countries = _countryRepository.GetComboCountries()
+                Countries = _countryRepository.GetComboCountries(),
+                RoleChoices = _userHelper.GetComboRoles()
             };
 
             return this.View(model);
         }
+
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
+                new { ReturnUrl = returnUrl });
+
+            var properties =
+                _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LoginViewModel loginViewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins =
+                (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty,
+                    $"Error from external provider: {remoteError}");
+
+                return View("Login", loginViewModel);
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+
+            if (info == null)
+            {
+                return View("Login", loginViewModel);
+            }
+
+            var signResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            else if (signResult.IsLockedOut)
+            {
+                return RedirectToAction(nameof(RecoverPassword));
+            }
+
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userHelper.GetUserByEmailAsync(email);
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        };
+
+                        await _userManager.CreateAsync(user);
+                    }
+
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
+                }
+
+                ViewBag.ErrorTittle = $"Error claim not received from: {info.LoginProvider}";
+
+                return View("Error");
+            }
+        }
+
+
+
 
 
         [HttpPost]
@@ -122,49 +230,90 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
                 if (user == null)
                 {
-
                     user = new User
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        Email = model.Username,
-                        UserName = model.Username,
+                        Email = model.EmailAddress,
+                        UserName = model.EmailAddress,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
                         City = model.City,
-                        CountryId = model.CountryId
+                        CountryId = model.CountryId,
+                        RoleId = model.RoleID,
+                        DateOfBirth = model.DateOfBirth,
                     };
-
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-                    if (result != IdentityResult.Success)
-                    {
-                        this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
-                        return this.View(model);
-                    }
-
-                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                    var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
-                    {
-                        userid = user.Id,
-                        token = myToken
-                    }, protocol: HttpContext.Request.Scheme);
-
-                    _mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-                    this.ViewBag.Message = "The instructions to allow your user has been sent to email.";
-
-
-                    return this.View(model);
                 }
 
-                this.ModelState.AddModelError(string.Empty, "The user already exists.");
+                if (User.Identity.IsAuthenticated)
+                {
+                    try
+                    {
+                        var result = await _userHelper.AddUserAsync(user, model.Password);
 
+                        if (result != IdentityResult.Success)
+                        {
+                            ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                            return View(model);
+                        }
+
+                        var roleName = await _roleManager.FindByIdAsync(user.RoleId);
+                        var register = await _userManager.FindByIdAsync(user.Id);
+                        await _userManager.AddToRoleAsync(register, roleName.ToString());
+                        ModelState.AddModelError(string.Empty, "User registered with success. Verify email address.");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
+
+                else if (!User.Identity.IsAuthenticated)
+                {
+                    try
+                    {
+                        var result = await _userHelper.AddUserAsync(user, model.Password);
+
+                        if (result != IdentityResult.Success)
+                        {
+                            this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                            return this.View(model);
+                        }
+
+                        ModelState.AddModelError(string.Empty, "Click the link sent to your email to confirm your account!");
+
+                        await _userHelper.AddUserToRoleAsync(user, "Client");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
+                var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                try
+                {
+                    _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    $"Complete your registration by " +
+                    $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                return View(model);
             }
 
+            ModelState.AddModelError(string.Empty, "This user already exists.");
             return View(model);
         }
 
@@ -383,7 +532,7 @@ namespace BookStore.Controllers
                     user.LastName = model.LastName;
                     user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
-                    
+
 
                     var respose = await _userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)

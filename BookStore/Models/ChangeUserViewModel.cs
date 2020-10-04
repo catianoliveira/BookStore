@@ -22,7 +22,7 @@ namespace BookStore.Models
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters.")]
         public string Address { get; set; }
 
-
+        public string City { get; set; }
 
         [MaxLength(20, ErrorMessage = "The field {0} only can contain {1} characters.")]
         public string PhoneNumber { get; set; }

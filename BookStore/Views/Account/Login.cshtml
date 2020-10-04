@@ -1,79 +1,150 @@
 ﻿@model BookStore.Models.LoginViewModel
 
-
 @{
     Layout = null;
 }
 
-
-
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>BookStore - Login</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="Majestic Login Form Widget Responsive, Login form web template,Flat Pricing tables,Flat Drop downs  Sign up Web Templates, Flat Web Templates, Login signup Responsive web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-    <!-- font files -->
-    <link href='//fonts.googleapis.com/css?family=Muli:400,300,300italic,400italic' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Comfortaa:400,300,700' rel='stylesheet' type='text/css'>
-    <!-- /font files -->
-    <!-- css files -->
-    <link href="~/login/css/animate-custom.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="~/login/css/style.css" rel="stylesheet" type="text/css" media="all" />
-    <!-- /css files -->
+    <title>BookStore | Log in</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
 </head>
-<body>
-    <h1 class="w3ls">Welcome back!</h1>
-    <div id="container_demo">
-        <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
-        <a class="hiddenanchor" id="toregister"></a>
-        <a class="hiddenanchor" id="tologin"></a>
-        <div id="wrapper">
-            <div id="login" class="animate form">
+<body class="hold-transition login-page" style="        background-image: url('../images/banner.jpg');
+        background-repeat: no-repeat;
+        background-size: 1600px 800px;
+">
+
+
+    <div class="login-box">
+        <div class="login-logo">
+            <b href="~/~/index2.html"><b>Sign in</b>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
 
                 @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @autocomplete = "on" }))
 
                 {
                     @Html.AntiForgeryToken()
+                    <div>@Html.ValidationSummary(true, "", new { @style = "color: black" })</div>
+                    <div class="input-group mb-3">
+                        <input asp-for="Username" type="email" class="form-control" placeholder="Email">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span asp-validation-for="Username" class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span asp-validation-for="Password" class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">
+                                    Remember Me
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
 
-                    <h2>Log in</h2>
-                    <div>@Html.ValidationSummary(true, "", new { @style = "color: white" })</div>
-                    <br />
-                    <p>
-                        <label for="Username" class="uname" data-icon="u"><span>Your email</span></label>
-                        @Html.TextBoxFor(l => l.Username, new { @placeholder = "Username" })
-                    </p>
-                    <p>
-                        <label for="Password" class="youpasswd" data-icon="p"><span>Your password</span></label>
-                        @Html.PasswordFor(l => l.Password, new { @placeholder = "Password" })
-                    </p>
-                    <p>
-                        @Html.CheckBoxFor(l => l.RememberMe, new { @id = "brand" })
-                        <label for="brand"><span></span> Remember me?</label>
-                    </p>
-                    <p class="login button">
-                        <input type="submit" value="Login" />
-                    </p>
-                    <p class="login button">
-                        <a href="RecoverPassword" class="to_register">
-                            <span>Forgot your password?</span>
-                        </a>
-                    </p>
-                    <p class="login button">
-                        <a href="Register" class="to_register">
-                            <span>Not a client yet? Register now!</span>
-                        </a>
-                    </p>
                 }
+                @foreach (var provider in Model.ExternalLogins)
+                {
+                    <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+
+                        <div class="social-auth-links text-center mb-3">
+
+
+                            @if (provider.Name == "Facebook")
+                            {
+                            <button data-onsuccess="onSignIn"
+                                    class="btn btn-block btn-primary" type="submit" value="@provider.Name"
+                                    title="Log in using your @provider.DisplayName account" name="provider">
+                                <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+                            </button>
+                            }
+                            else if (provider.Name == "Google")
+                            {
+                        <button data-onsuccess="onSignIn"
+                                type="submit" class="btn btn-block btn-danger" value="@provider.Name"
+                                title="Log in using your @provider.DisplayName account" name="provider">
+                            <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                        </button>
+                            }
+                        </div>
+                    </form>
+                }
+                <!-- /.social-auth-links -->
+
+                <p class="mb-1">
+                    <a href="recoverpassword">I forgot my password</a>
+                </p>
+                <p class="mb-0">
+                    <a href="register" class="text-center">Not a member yet? Register now!</a>
+                </p>
             </div>
+            <!-- /.login-card-body -->
         </div>
-        <p class="agileits">© 2016 Majestic Login Form. All Rights Reserved | Design by <a href="https://w3layouts.com/" target="_blank">w3layouts</a></p>
     </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+
+
 </body>
 </html>
-section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+
+
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        }
+
+    </script>
 }

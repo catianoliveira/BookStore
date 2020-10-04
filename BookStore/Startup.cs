@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using System;
 
 namespace BookStore
 {
@@ -48,17 +47,28 @@ namespace BookStore
 
 
 
-            services.AddAuthentication()
-                .AddCookie()
-                .AddJwtBearer(cfg =>
+            services
+               .AddAuthentication()
+
+               .AddGoogle(options =>
+               {
+                   options.ClientId = Configuration["App:GoogleClientId"];
+                   options.ClientSecret = Configuration["App:GoogleClientSecret"];
+                   options.SignInScheme = IdentityConstants.ExternalScheme;
+               })
+               .AddFacebook(options =>
+               {
+                   options.ClientId = Configuration["App:FacebookClientId"];
+                   options.ClientSecret = Configuration["App:FacebookClientSecret"];
+                   options.SignInScheme = IdentityConstants.ExternalScheme;
+               })
+
+                .AddCookie(options =>
                 {
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = this.Configuration["Tokens:Issuer"],
-                        ValidAudience = this.Configuration["Tokens:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
-                    };
+                    options.Cookie.Name = ".AspNet.ExternalCookie";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.LogoutPath = new PathString("/Account/Logout");
                 });
 
 
@@ -81,8 +91,8 @@ namespace BookStore
 
             services.Configure<CookiePolicyOptions>(options =>
             {
-                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                    options.CheckConsentNeeded = context => true;
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 

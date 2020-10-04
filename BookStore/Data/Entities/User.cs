@@ -14,18 +14,14 @@ namespace BookStore.Data.Entities
 
 
 
-
-        [Required]
         public string FirstName { get; set; }
 
 
 
-        [Required]
         public string LastName { get; set; }
 
 
 
-        [Required]
         [LessThanDate(ErrorMessage = "Date of birth must be less than today's day")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
@@ -46,18 +42,12 @@ namespace BookStore.Data.Entities
 
 
 
-
-
-
-        [Required]
         [MaxLength(70, ErrorMessage = "The field {0} can only contain {1} characters")]
         public string Address { get; set; }
 
 
 
 
-
-        [Required]
         [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
         public string City { get; set; }
 
@@ -65,7 +55,6 @@ namespace BookStore.Data.Entities
 
 
 
-        [Required]
         [Display(Name = "Country")]
         public int CountryId { get; set; }
 

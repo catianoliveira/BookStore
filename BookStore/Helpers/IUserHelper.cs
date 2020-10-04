@@ -1,9 +1,8 @@
 ﻿using BookStore.Data.Entities;
 using BookStore.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookStore.Helpers
@@ -12,6 +11,7 @@ namespace BookStore.Helpers
     {
         Task AddUserToRoleAsync(User user, string roleName);
 
+        IEnumerable<SelectListItem> GetComboRoles();
 
 
         Task<User> GetUserByEmailAsync(string email);

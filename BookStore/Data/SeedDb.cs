@@ -27,8 +27,10 @@ namespace BookStore.Data
             await _context.Database.EnsureCreatedAsync();
 
 
-            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("SuperAdmin");
             await _userHelper.CheckRoleAsync("Customer");
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Reseller");
 
             if (!_context.Categories.Any())
             {

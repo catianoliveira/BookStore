@@ -1,88 +1,216 @@
 ﻿@model BookStore.Models.RegisterNewUserViewModel
-@{
-    ViewData["Title"] = "Register";
-}
 
-<h2>Register New User</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register - BookStore</title>
 
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly"></div>
-
-            <div class="form-group">
-                <label asp-for="FirstName">First Name</label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-warning"></span>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/~/dist/css/adminlte.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="~/~/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="~/~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="~/~/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/~/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="~/~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
             </div>
-
-            <div class="form-group">
-                <label asp-for="LastName">Last Name</label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-warning"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Address">Address</label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-warning"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PhoneNumber">Phone Number</label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-warning"></span>
-            </div>
-
-
-
-
-            <div class="form-group">
-                <label asp-for="Username">Username</label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-warning"></span>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="CountryId" class="control-label"></label>
-                <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
-                <span asp-validation-for="CountryId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="City">City</label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-warning"></span>
-            </div>
-
-
-
-
-            <div class="form-group">
-                <label asp-for="Password">Password</label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-warning"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Confirm">Confirm</label>
-                <input asp-for="Confirm" type="password" class="form-control" />
-                <span asp-validation-for="Confirm" class="text-warning"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Register New User" class="btn btn-primary" />
-            </div>
-        </form>
+            <h1></h1>
+        </div>
     </div>
-</div>
+    <!-- /.container-fluid -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Register</h3>
 
-<div class="text-success">
-    <p>
-        @ViewBag.Message
-    </p>
-</div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+                </div>
+                <!-- Content Header (Page header) -->
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @autocomplete = "on" }))
+                {
+                    @Html.ValidationSummary(false)
+                    <div>@Html.ValidationSummary(true, "", new { @style = "color: black" })</div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
+                             || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                                {
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <label asp-for="RoleID" class="control-label"></label>
+                                        <select asp-for="RoleID" asp-items="Model.RoleChoices" class="form-control"></select>
+                                        <span asp-validation-for="RoleID" class="text-danger"></span>
+                                    </div>
+                                }
+                                <div class="form-group">
+                                    <label asp-for="FirstName">First Name</label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LastName">Last Name</label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="City">City</label>
+                                    <input asp-for="City" class="form-control" />
+                                    <span asp-validation-for="City" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Password">Password</label>
+                                    <input asp-for="Password" type="password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Confirm">Confirm</label>
+                                    <input asp-for="Confirm" type="password" class="form-control" />
+                                    <span asp-validation-for="Confirm" class="text-warning"></span>
+                                </div>
+                                <br />
+                                <div class="form-group">
+                                    <input type="submit" value="Register" class="btn btn-info" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="EmailAddress">Email Address</label>
+                                    <input asp-for="EmailAddress" class="form-control" />
+                                    <span asp-validation-for="EmailAddress" class="text-warning"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="DateOfBirth">Date of Birth</label>
+                                    <input asp-for="DateOfBirth" class="form-control" />
+                                    <span asp-validation-for="DateOfBirth" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Address">Address</label>
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CountryId" class="control-label"></label>
+                                    <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
+                                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber">Phone Number</label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-warning"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+    <!-- /.content -->
+    <!-- /.content-wrapper -->
+    <!-- ./wrapper -->
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <!-- InputMask -->
+        <script src="~/~/plugins/moment/moment.min.js"></script>
+        <script src="~/~/plugins/inputmask/jquery.inputmask.min.js"></script>
+        <!-- date-range-picker -->
+        <script src="~/~/plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- jQuery -->
+        <script src="~/~/plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="~/~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap4 Duallistbox -->
+        <script src=".~/~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="~/~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- DataTables -->
+        <script src="~/~/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/~/dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="~/~/dist/js/demo.js"></script>
+        <!-- page script -->
+
+        <script>
+            var inputObject = {};
+            var input = document.querySelectorAll('.e-input-group .e-input,.e-float-input.e-input-group input');
+            var inputIcon = document.querySelectorAll('.e-input-group-icon');
+            var focusFn = function (index) {
+                return function () {
+                    getParentNode(input[index]).classList.add('e-input-focus');
+                };
+            };
+
+            var blurFn = function (index) {
+                return function () {
+                    getParentNode(input[index]).classList.remove('e-input-focus');
+                };
+            };
+
+            var mouseupFn = function () {
+                var ele = this;
+                setTimeout(function () { ele.classList.remove('e-input-btn-ripple'); }, 500);
+            };
+
+            for (var i = 0; i < input.length; i++) {
+                //Focus Event binding for input component
+                input[i].addEventListener('focus', focusFn(i));
+                //Blur Event binding for input component
+                input[i].addEventListener('blur', blurFn(i));
+            }
+            for (var j = 0; j < inputIcon.length; j++) {
+                inputIcon[j].addEventListener('mousedown', function () {
+                    this.classList.add('e-input-btn-ripple');
+                });
+                inputIcon[j].addEventListener('mouseup', mouseupFn);
+            }
+            function getParentNode(element) {
+                var parentNode = element.parentNode;
+                if (parentNode.classList.contains('e-input-in-wrap')) {
+                    return parentNode.parentNode;
+                }
+                return parentNode;
+            }
+        </script>
+
     }
+
+</body>
+</html>
+

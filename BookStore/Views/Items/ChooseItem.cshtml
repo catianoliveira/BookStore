@@ -1,0 +1,139 @@
+﻿@model IEnumerable<BookStore.Data.Entities.Item>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/ogani/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/ogani/css/style.css" type="text/css">
+
+
+
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Items</h3>
+                </div>
+                @using (Html.BeginForm("ChooseItem", "Items", FormMethod.Post, new { @autocomplete = "on" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="card-body">
+                        <table id="items" class="display table table-bordered table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Title)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Author)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ISBN)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Price)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ImageUrl)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IsAvaiable)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Stock)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Author)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ISBN)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Price)
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                            {
+                                                <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:100px;height:150px;max-width:100%; height:auto" />
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsAvaiable)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Stock)
+                                        </td>
+                                        <td id="@item.Id">
+                                            <a class="btn btn-info pull-right" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                            <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete @item.Title?')"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Title)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Author)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ISBN)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Price)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ImageUrl)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IsAvaiable)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Stock)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+        <!-- /.card -->
+        <!-- /.col -->
+        <!-- /.row -->
+        <!-- /.container-fluid -->
+    </section>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <script src="~/ogani/js/jquery-3.3.1.min.js"></script>
+        <script src="~/ogani/js/bootstrap.min.js"></script>
+        <script src="~/ogani/js/jquery.nice-select.min.js"></script>
+        <script src="~/ogani/js/jquery-ui.min.js"></script>
+        <script src="~/ogani/js/jquery.slicknav.js"></script>
+        <script src="~/ogani/js/mixitup.min.js"></script>
+        <script src="~/ogani/js/owl.carousel.min.js"></script>
+        <script src="~/ogani/js/main.js"></script>
+    }

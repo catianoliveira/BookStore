@@ -1,11 +1,6 @@
-﻿using BookStore.Data.Entities;
-using BookStore.Helpers;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookStore.Models
 {
@@ -20,5 +15,11 @@ namespace BookStore.Models
         public string Password { get; set; }
 
         public bool RememberMe { get; set; }
+
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+
+        public string ReturnUrl { get; set; }
+
     }
 }

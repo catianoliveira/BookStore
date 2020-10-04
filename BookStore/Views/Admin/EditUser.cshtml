@@ -1,60 +1,133 @@
 ﻿@model BookStore.Models.EditUserViewModel
 
-@using (Html.BeginForm("EditUser", "Admin", FormMethod.Post, new { @autocomplete = "on" }))
-{
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Airport - BookStore</title>
 
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="FirstName" class="control-label"></label>
-                    <input asp-for="FirstName" class="form-control" />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
-                <div class="form-group ">
-                    <label asp-for="LastName" class="control-label"></label>
-                    <input asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Address" class="control-label"></label>
-                    <input asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
+</head>
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="SelectedRole" class="control-label"></label>
-                    <select asp-for="SelectedRole" class="form-control" asp-items="@Model.Roles"></select>
-                    <span asp-validation-for="SelectedRole" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="City" class="control-label"></label>
-                    <input asp-for="City" class="form-control" />
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="CountryId" class="control-label"></label>
-                    <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries"></select>
-                    <span asp-validation-for="CountryId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="PhoneNumber" class="control-label"></label>
-                    <input type="tel" asp-for="PhoneNumber" class="form-control" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
+            <h1></h1>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/ListUsers">Users</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                </ol>
             </div>
-
-        </div>
-
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-info" />
         </div>
     </div>
-}
+    <!-- /.container-fluid -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit User</h3>
+
+                </div>
+                <!-- Content Header (Page header) -->
+
+                @using (Html.BeginForm("EditUser", "Admin", FormMethod.Post, new { @autocomplete = "on" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FirstName" class="control-label"></label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group ">
+                                    <label asp-for="LastName" class="control-label"></label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Address" class="control-label"></label>
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="SelectedRole" class="control-label"></label>
+                                    <select asp-for="SelectedRole" class="form-control" asp-items="@Model.Roles"></select>
+                                    <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="City" class="control-label"></label>
+                                    <input asp-for="City" class="form-control" />
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CountryId" class="control-label"></label>
+                                    <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries"></select>
+                                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input type="tel" asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-info" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+    <!-- /.content-wrapper -->
+    <!-- ./wrapper -->
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <!-- InputMask -->
+        <script src="~/~/plugins/moment/moment.min.js"></script>
+        <script src="~/~/plugins/inputmask/jquery.inputmask.min.js"></script>
+        <!-- date-range-picker -->
+        <script src="~/~/plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- jQuery -->
+        <script src="~/~/plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="~/~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap4 Duallistbox -->
+        <script src=".~/~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="~/~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- DataTables -->
+        <script src="~/~/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/~/dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="~/~/dist/js/demo.js"></script>
+        <!-- page script -->
+    }
+</body>
+</html>
+

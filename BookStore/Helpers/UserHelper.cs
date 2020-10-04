@@ -1,6 +1,8 @@
-﻿using BookStore.Data.Entities;
+﻿using BookStore.Data;
+using BookStore.Data.Entities;
 using BookStore.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +15,18 @@ namespace BookStore.Helpers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly DataContext _context;
 
         public UserHelper(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            DataContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public async Task AddUserToRoleAsync(User user, string roleName)
@@ -129,6 +134,24 @@ namespace BookStore.Helpers
                 user,
                 password,
                 false);
+        }
+
+        public IEnumerable<SelectListItem> GetComboRoles()
+        {
+            var list = _context.Roles.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+
+            }).OrderBy(l => l.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select a role...)",
+                Value = "0"
+            });
+
+            return list;
         }
     }
 }

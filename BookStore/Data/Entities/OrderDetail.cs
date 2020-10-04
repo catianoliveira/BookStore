@@ -4,11 +4,14 @@ namespace BookStore.Data.Entities
 {
     public class OrderDetail : IEntity
     {
+        //shopping cart item
 
         public int Id { get; set; }
 
         [Required]
         public Item Item { get; set; }
+
+        public string ItemId { get; set; }
 
 
         [DisplayFormat(DataFormatString = "{0:C2}")]
@@ -21,6 +24,10 @@ namespace BookStore.Data.Entities
 
         [DisplayFormat(DataFormatString = "{0:C2}")]
         public decimal Value { get { return this.Price * (decimal)this.Quantity; } }
+
+
+        public virtual Order Order { get; set; }
+
 
     }
 }

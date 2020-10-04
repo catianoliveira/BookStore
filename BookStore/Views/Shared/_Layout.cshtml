@@ -1,5 +1,4 @@
-﻿<
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -89,12 +88,12 @@
 
                 <!-- Sidebar Menu -->
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-                  || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                 || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-copy"></i>
@@ -106,13 +105,11 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Account/Register" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Register new user</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Users
                                             </p>
@@ -120,7 +117,6 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/CreateRole" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Create Role</p>
                                         </a>
                                     </li>
@@ -137,13 +133,11 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Account/Register" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Available</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Not Available
                                             </p>
@@ -151,7 +145,6 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Items/Create" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Add new
                                             </p>
@@ -175,7 +168,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                             <li class="nav-item">
                                 <a href="/Account/Register" class="nav-link">
                                     <i class="nav-icon fas fa-edit"></i>
@@ -195,13 +188,11 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Account/Register" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Available</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Not Available
                                             </p>
@@ -211,7 +202,6 @@
                             </li>
                             <li class="nav-item">
                                 <a href="/" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
                                     <p>
                                         Purchases
                                     </p>
@@ -238,13 +228,11 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Account/Register" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Purchases</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Update my information
                                             </p>
@@ -254,7 +242,6 @@
                             </li>
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Categories
                                         <i class="fas fa-angle-left right"></i>
@@ -263,13 +250,11 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Account/Register" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Children's</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Crime & Thriller
                                             </p>
@@ -277,13 +262,11 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/CreateRole" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Fiction</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Others
                                             </p>
@@ -291,7 +274,6 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Poetry
                                             </p>
@@ -299,11 +281,18 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/CreateRole" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Romance</p>
                                         </a>
                                     </li>
                                 </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/items/chooseitem" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Every book
+                                    </p>
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a href="/" class="nav-link">
@@ -316,12 +305,12 @@
                         </ul>
                     </nav>
                 }
-                @if (!this.User.Identity.IsAuthenticated)
+                else
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-book"></i>
@@ -333,13 +322,11 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Account/Register" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Children's</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Crime & Thriller
                                             </p>
@@ -347,13 +334,11 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/CreateRole" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Fiction</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Others
                                             </p>
@@ -361,7 +346,6 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/ListUsers" class="nav-link">
-                                            <i class="nav-icon far fa-address-book"></i>
                                             <p>
                                                 Poetry
                                             </p>
@@ -369,7 +353,6 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/Admin/CreateRole" class="nav-link">
-                                            <i class="nav-icon fas fa-edit"></i>
                                             <p>Romance</p>
                                         </a>
                                     </li>
@@ -395,6 +378,7 @@
             <!-- Content Header (Page header) -->
             <section class="content">
                 <div class="container-fluid">
+                    <div class="row">
                         <div class="col-12">
                             <!-- Default box -->
 
@@ -406,6 +390,7 @@
                             </div>
                             <!-- /.card -->
                         </div>
+                    </div>
                 </div>
             </section>
 

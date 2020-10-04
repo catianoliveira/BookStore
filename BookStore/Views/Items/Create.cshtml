@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create Flights - HighFly</title>
+    <title>Add new Book - BookStore</title>
 
     <!-- DataTables -->
     <link rel="stylesheet" href="~/~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -32,12 +32,6 @@
             <div class="col-sm-6">
             </div>
             <h1></h1>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Flightss">Flights</a></li>
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                </ol>
-            </div>
         </div>
     </div>
     <!-- /.container-fluid -->
@@ -46,7 +40,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Create Flights</h3>
+                    <h3 class="card-title">Create Books</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -59,7 +53,11 @@
                                 
                                 
                                 
-                                
+                            <div class="form-group">
+                                <label asp-for="CategoryId" class="control-label"></label>
+                                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
                                 <div class="form-group">
                                     <label asp-for="Title" class="control-label"></label>
                                     <input asp-for="Title" class="form-control" />

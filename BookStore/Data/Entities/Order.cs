@@ -9,6 +9,8 @@ namespace BookStore.Data.Entities
 {
     public class Order : IEntity
     {
+        //shopping cart 
+
         public int Id { get; set; }
 
 

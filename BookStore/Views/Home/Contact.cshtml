@@ -1,17 +1,103 @@
-﻿@{
-    ViewData["Title"] = "Contact";
-}
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+﻿@model BookStore.Models.ContactViewModel
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home - BookStore</title>
 
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/~/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <h1></h1>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Contact Us</h2>
+
+                </div>
+                <!-- Content Header (Page header) -->
+                <div class="card-body">
+
+                    <div>
+                        <div class="col-md-6">
+                            <div>
+                                <div>
+                                    <form method="post">
+                                        <div class="form-group">
+                                            <label asp-for="Name">Name</label>
+                                            <input asp-for="Name" class="form-control" />
+                                            <span asp-validation-for="Name"
+                                                  class="text-muted"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Email">Email</label>
+                                            <input asp-for="Email" class="form-control" />
+                                            <span asp-validation-for="Email"
+                                                  class="text-muted"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Subject">Subject</label>
+                                            <input asp-for="Subject" class="form-control" />
+                                            <span asp-validation-for="Subject"
+                                                  class="text-muted"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Message">Message</label>
+                                            <textarea rows="5" cols="15"
+                                                      asp-for="Message" class="form-control"></textarea>
+                                            <span asp-validation-for="Message"
+                                                  class="text-muted"></span>
+                                        </div>
+                                        <div>
+                                            <button type="submit"
+                                                    class="btn btn-info">
+                                                Send
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    }
+
+</body>
+</html>

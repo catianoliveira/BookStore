@@ -19,6 +19,25 @@ namespace BookStore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("BookStore.Data.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count");
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<int>("ItemId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("Carts");
+                });
+
             modelBuilder.Entity("BookStore.Data.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -50,6 +69,8 @@ namespace BookStore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedDate");
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -108,7 +129,9 @@ namespace BookStore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ItemId");
+                    b.Property<string>("ItemId");
+
+                    b.Property<int>("ItemId1");
 
                     b.Property<int?>("OrderId");
 
@@ -119,7 +142,7 @@ namespace BookStore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("ItemId1");
 
                     b.HasIndex("OrderId");
 
@@ -159,11 +182,9 @@ namespace BookStore.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(70);
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("ConcurrencyStamp")
@@ -178,11 +199,9 @@ namespace BookStore.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired();
+                    b.Property<string>("FirstName");
 
-                    b.Property<string>("LastName")
-                        .IsRequired();
+                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -332,6 +351,14 @@ namespace BookStore.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("BookStore.Data.Entities.Cart", b =>
+                {
+                    b.HasOne("BookStore.Data.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("BookStore.Data.Entities.Item", b =>
                 {
                     b.HasOne("BookStore.Data.Entities.User", "User")
@@ -351,10 +378,10 @@ namespace BookStore.Migrations
                 {
                     b.HasOne("BookStore.Data.Entities.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemId")
+                        .HasForeignKey("ItemId1")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BookStore.Data.Entities.Order")
+                    b.HasOne("BookStore.Data.Entities.Order", "Order")
                         .WithMany("Items")
                         .HasForeignKey("OrderId");
                 });

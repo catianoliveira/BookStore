@@ -1,5 +1,6 @@
 ﻿using BookStore.Data.Entities;
 using BookStore.Models;
+using System;
 
 namespace BookStore.Helpers
 {
@@ -33,7 +34,8 @@ namespace BookStore.Helpers
                 ISBN = model.ISBN,
                 Price = model.Price,
                 Stock = model.Stock,
-                User = model.User
+                User = model.User,
+                AddedDate = DateTime.Today
             };
         }
     }

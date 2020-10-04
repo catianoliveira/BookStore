@@ -40,6 +40,12 @@ namespace BookStore.Controllers
         }
 
 
+        public IActionResult ChooseItem()
+        {
+            return View(_itemRepository.GetAll().OrderBy(p => p.Title));
+        }
+
+
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {

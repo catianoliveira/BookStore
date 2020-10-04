@@ -46,6 +46,7 @@ namespace BookStore.Data.Entities
         public double Stock { get; set; }
 
 
+        public DateTime AddedDate { get; set; }
 
 
         public User User { get; set; }

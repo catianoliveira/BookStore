@@ -1,10 +1,12 @@
-﻿using BookStore.Data.Entities;
+﻿using BookStore.Data;
+using BookStore.Data.Entities;
 using BookStore.Data.Repositories;
 using BookStore.Helpers;
 using BookStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -25,6 +27,7 @@ namespace BookStore.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly DataContext _context;
 
         public AccountController(
             ICountryRepository countryRepository,
@@ -33,7 +36,8 @@ namespace BookStore.Controllers
             IMailHelper mailHelper,
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            DataContext context)
         {
             _countryRepository = countryRepository;
             _userHelper = userHelper;
@@ -42,6 +46,7 @@ namespace BookStore.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
 
@@ -230,6 +235,7 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
                 if (user == null)
                 {
@@ -248,6 +254,7 @@ namespace BookStore.Controllers
                     };
                 }
 
+
                 if (User.Identity.IsAuthenticated)
                 {
                     try
@@ -264,6 +271,17 @@ namespace BookStore.Controllers
                         var register = await _userManager.FindByIdAsync(user.Id);
                         await _userManager.AddToRoleAsync(register, roleName.ToString());
                         ModelState.AddModelError(string.Empty, "User registered with success. Verify email address.");
+                    }
+                    catch (DbUpdateException dbUpdateException)
+                    {
+                        if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                        {
+                            ModelState.AddModelError(string.Empty, "There's an user with that email already!");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -286,7 +304,9 @@ namespace BookStore.Controllers
                         ModelState.AddModelError(string.Empty, "Click the link sent to your email to confirm your account!");
 
                         await _userHelper.AddUserToRoleAsync(user, "Client");
+
                     }
+
                     catch (Exception ex)
                     {
                         ModelState.AddModelError(string.Empty, ex.Message);
@@ -500,18 +520,7 @@ namespace BookStore.Controllers
                 model.LastName = user.LastName;
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
-
-                //TODO if (city != null)
-                //{
-                //    var country = await _countryRepository.GetCountryAsync(city);
-                //    if (country != null)
-                //    {
-                //        model.CountryId = country.Id;
-                //        model.Cities = _countryRepository.GetComboCities(country.Id);
-                //        model.Countries = _countryRepository.GetComboCountries();
-                //        model.CityId = user.CityId;
-                //    }
-                //}
+                model.CountryId = user.CountryId;
             }
 
             model.Countries = _countryRepository.GetComboCountries();
@@ -532,7 +541,7 @@ namespace BookStore.Controllers
                     user.LastName = model.LastName;
                     user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
-
+                    user.CountryId = model.CountryId;
 
                     var respose = await _userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -35,7 +36,7 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="~/Orders/Cart" class="nav-link"><i class="fa fa-shopping-basket"></i> Cart</a>
+                    <a href="~/Orders/Create" class="nav-link"><i class="fa fa-shopping-basket"></i> Cart</a>
                 </li>
 
                 @if (this.User.Identity.IsAuthenticated)
@@ -88,12 +89,12 @@
 
                 <!-- Sidebar Menu -->
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-                 || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+               || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-copy"></i>
@@ -104,26 +105,26 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/Account/Register" class="nav-link">
+                                        <a href="~/Account/Register" class="nav-link">
                                             <p>Register new user</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
+                                        <a href="~/Admin/ListUsers" class="nav-link">
                                             <p>
                                                 Users
                                             </p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/CreateRole" class="nav-link">
+                                        <a href="~/Admin/CreateRole" class="nav-link">
                                             <p>Create Role</p>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
+                                <a href="~/Items" class="nav-link">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Books
@@ -132,19 +133,12 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/Account/Register" class="nav-link">
-                                            <p>Available</p>
+                                        <a href="~/Items" class="nav-link">
+                                            <p>See All</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Not Available
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Items/Create" class="nav-link">
+                                        <a href="~/Items/Create" class="nav-link">
                                             <p>
                                                 Add new
                                             </p>
@@ -153,10 +147,10 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a href="/" class="nav-link">
+                                <a href="~/orders" class="nav-link">
                                     <i class="nav-icon fas fa-table"></i>
                                     <p>
-                                        Purchases
+                                        Orders
                                     </p>
                                 </a>
                             </li>
@@ -168,9 +162,9 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+                with font-awesome or any other icon font library -->
                             <li class="nav-item">
-                                <a href="/Account/Register" class="nav-link">
+                                <a href="~/Account/Register" class="nav-link">
                                     <i class="nav-icon fas fa-edit"></i>
                                     <p>
                                         Register new Client
@@ -187,52 +181,58 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/Account/Register" class="nav-link">
+                                        <a href="~/Items/InStock" class="nav-link">
                                             <p>Available</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
+                                        <a href="~/Items/NotInStock" class="nav-link">
                                             <p>
                                                 Not Available
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Items/Create" class="nav-link">
+                                            <p>
+                                                Add new
                                             </p>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a href="/" class="nav-link">
+                                <a href="~/orders" class="nav-link">
                                     <p>
-                                        Purchases
+                                        Orders
                                     </p>
                                 </a>
                             </li>
                         </ul>
                     </nav>
                 }
-                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Client"))
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Client") || this.User.Identity.IsAuthenticated && this.User.IsInRole("Reseller"))
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+                with font-awesome or any other icon font library -->
                             <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link active">
+                                <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         My Account
                                         <i class="fas fa-angle-left right"></i>
-                                        <span class="badge badge-info right">6</span>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/Account/Register" class="nav-link">
-                                            <p>Purchases</p>
+                                        <a href="~/orders" class="nav-link">
+                                            <p>Orders</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
+                                        <a href="/Account/ChangeUser" class="nav-link">
                                             <p>
                                                 Update my information
                                             </p>
@@ -240,65 +240,11 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <p>
-                                        Categories
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/Account/Register" class="nav-link">
-                                            <p>Children's</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Crime & Thriller
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/CreateRole" class="nav-link">
-                                            <p>Fiction</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Others
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Poetry
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/CreateRole" class="nav-link">
-                                            <p>Romance</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
                             <li class="nav-item">
-                                <a href="/items/chooseitem" class="nav-link">
+                                <a href="~/items/instock" class="nav-link">
                                     <i class="nav-icon fas fa-table"></i>
                                     <p>
-                                        Every book
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
-                                    <p>
-                                        Bestsellers
+                                        Books
                                     </p>
                                 </a>
                             </li>
@@ -307,66 +253,20 @@
                 }
                 else
                 {
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-book"></i>
-                                    <p>
-                                        Categories
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/Account/Register" class="nav-link">
-                                            <p>Children's</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Crime & Thriller
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/CreateRole" class="nav-link">
-                                            <p>Fiction</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Others
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/ListUsers" class="nav-link">
-                                            <p>
-                                                Poetry
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Admin/CreateRole" class="nav-link">
-                                            <p>Romance</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            <li class="nav-item">
-                                <a href="/" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
-                                    <p>
-                                        Bestsellers
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+            with font-awesome or any other icon font library -->
+                        <li class="nav-item">
+                            <a href="~/items/instock" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Books
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
                 }
                 <!-- /.sidebar-menu -->
             </div>

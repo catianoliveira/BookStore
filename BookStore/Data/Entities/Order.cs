@@ -47,8 +47,8 @@ namespace BookStore.Data.Entities
         public double Quantity => this.Items == null ? 0 : this.Items.Sum(i => i.Quantity);
 
 
-
-        public decimal Value => this.Items == null ? 0 : this.Items.Sum(i => i.Value);
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal Value { get; set; }
 
 
         [DisplayName("Order date")]

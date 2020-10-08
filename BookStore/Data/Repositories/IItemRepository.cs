@@ -12,5 +12,9 @@ namespace BookStore.Data.Repositories
         IQueryable GetAllWithUsers();
 
         IEnumerable<SelectListItem> GetComboItems();
+
+        IQueryable GetInStock();
+
+        IQueryable GetNotInStock();
     }
 }

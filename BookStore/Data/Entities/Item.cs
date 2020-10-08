@@ -52,6 +52,7 @@ namespace BookStore.Data.Entities
         public User User { get; set; }
 
 
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
 
@@ -71,5 +72,8 @@ namespace BookStore.Data.Entities
                 return $"https://webistes.azurewebsites.net{this.ImageUrl.Substring(1)}";
             }
         }
+
+
+
     }
 }

@@ -2,8 +2,10 @@
 using BookStore.Data.Repositories;
 using BookStore.Helpers;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,13 +18,15 @@ namespace BookStore.Controllers
         private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public ItemsController(
             IItemRepository itemRepository,
             IUserHelper userHelper,
             IImageHelper imageHelper,
             IConverterHelper converterHelper,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IOrderRepository orderRepository)
         {
 
             _itemRepository = itemRepository;
@@ -30,9 +34,10 @@ namespace BookStore.Controllers
             _imageHelper = imageHelper;
             _converterHelper = converterHelper;
             _categoryRepository = categoryRepository;
+            _orderRepository = orderRepository;
         }
 
-
+        [Authorize(Roles = "SuperAdmin")]
         // GET: Products
         public IActionResult Index()
         {
@@ -40,9 +45,45 @@ namespace BookStore.Controllers
         }
 
 
-        public IActionResult ChooseItem()
+        public IActionResult ChooseItem(int id)
         {
-            return View(_itemRepository.GetAll().OrderBy(p => p.Title));
+            var model = new AddItemViewModel
+            {
+                Quantity = 1,
+                ItemId = id,
+                Items = _itemRepository.GetComboItems()
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChooseItem(AddItemViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                else
+                {
+                    try
+                    {
+                        await _orderRepository.AddItemToOrderAsync(model, this.User.Identity.Name);
+                        return this.RedirectToAction("InStock");
+                    }
+
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
+            }
+            return this.View(model);
         }
 
 
@@ -51,13 +92,13 @@ namespace BookStore.Controllers
         {
             if (id == null)
             {
-                return View(); //TODO Not Found
+                return View(); 
             }
 
             var product = await _itemRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
-                return View(); //TODO Not Found
+                return View(); 
             }
 
             return View(product);
@@ -65,15 +106,31 @@ namespace BookStore.Controllers
 
 
         // GET: Products/Create
-        //TODO [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Create()
         {
-            var model = new ItemViewModel
+            if (!User.Identity.IsAuthenticated)
             {
-                Categories = _categoryRepository.GetComboCategories()
-            };
+                return RedirectToAction("Login", "Account");
+            }
 
-            return View(model);
+            else
+            {
+                try
+                {
+                    var model = new ItemViewModel
+                    {
+                        Categories = _categoryRepository.GetComboCategories()
+                    };
+
+                    return View(model);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return View();
         }
 
 
@@ -105,20 +162,19 @@ namespace BookStore.Controllers
         }
 
         // GET: Products/Edit/5
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                return View(); //TODO Not Found
+                ModelState.AddModelError(string.Empty, "Id can't be null");
             }
 
             var product = await _itemRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
-                return View(); //TODO Not Found
+                ModelState.AddModelError(string.Empty, "Id can't be null");
             }
-
 
             var view = _converterHelper.ToProductViewModel(product);
 
@@ -148,11 +204,10 @@ namespace BookStore.Controllers
 
                     var product = _converterHelper.ToItem(model, path, false);
 
-                    //TODO: Change to the logged user
                     product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _itemRepository.UpdateAsync(product);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (!await _itemRepository.ExistAsync(model.Id))
                     {
@@ -160,7 +215,7 @@ namespace BookStore.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, ex.Message);
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -169,37 +224,53 @@ namespace BookStore.Controllers
         }
 
         // GET: Products/Delete/5
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return View(); //TODO Not Found
+                return NotFound();
             }
 
-            var product = await _itemRepository.GetByIdAsync(id.Value);
-            if (product == null)
+            var airport = await _itemRepository.GetByIdAsync(id.Value);
+
+            if (airport == null)
             {
-                return View(); //TODO Not Found
+                return NotFound();
             }
 
-            return View(product);
-        }
+            try
+            {
+                await _itemRepository.DeleteAsync(airport);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
-        // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _itemRepository.GetByIdAsync(id);
-            await _itemRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
         }
+
+       
 
 
         public IActionResult ProductNotFound()
         {
             return View();
         }
+
+
+        public IActionResult InStock()
+        {
+            return View(_itemRepository.GetInStock());
+        }
+
+        [Authorize(Roles = "SuperAdmin")]
+        public IActionResult NotInStock()
+        {
+            return View(_itemRepository.GetNotInStock());
+        }
+
+
     }
 }

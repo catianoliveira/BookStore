@@ -30,7 +30,7 @@ namespace BookStore.Data.Repositories
                 return null;
             }
 
-            if (await _userHelper.IsUserInRoleAsync(user, "Admin"))
+            if (await _userHelper.IsUserInRoleAsync(user, "SuperAdmin"))
             {
                 return _context.Orders
                     .Include(o => o.User)
@@ -129,12 +129,13 @@ namespace BookStore.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ConfirmOrderAsync(string userName)
+        public async Task<Order> ConfirmOrderAsync(string userName)
         {
             var user = await _userHelper.GetUserByEmailAsync(userName);
+
             if (user == null)
             {
-                return false;
+                return null;
             }
 
             var orderTmps = await _context.OrderDetailsTemp
@@ -144,9 +145,8 @@ namespace BookStore.Data.Repositories
 
             if (orderTmps == null || orderTmps.Count == 0)
             {
-                return false;
+                return null;
             }
-
 
             var details = orderTmps.Select(o => new OrderDetail
             {
@@ -155,6 +155,7 @@ namespace BookStore.Data.Repositories
                 Quantity = o.Quantity
             }).ToList();
 
+            decimal orderTotalValue = details.Sum(i => i.Value);
 
 
             var order = new Order
@@ -162,15 +163,19 @@ namespace BookStore.Data.Repositories
                 OrderDate = DateTime.UtcNow,
                 User = user,
                 Items = details,
+                Value = user.RoleId == "18f29bdf-0d6c-472b-9e41-472f8e6730f2" ? orderTotalValue * (decimal)0.8 : orderTotalValue
             };
 
+
+
             _context.Orders.Add(order);
+
             _context.OrderDetailsTemp.RemoveRange(orderTmps);
+
             await _context.SaveChangesAsync();
-            return true;
 
+            return order;
         }
-
         public async Task DeliverOrderAsync(DeliverViewModel model)
         {
             var order = await _context.Orders.FindAsync(model.Id);

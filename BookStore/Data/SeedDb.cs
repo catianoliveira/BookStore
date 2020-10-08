@@ -28,8 +28,7 @@ namespace BookStore.Data
 
 
             await _userHelper.CheckRoleAsync("SuperAdmin");
-            await _userHelper.CheckRoleAsync("Customer");
-            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Client");
             await _userHelper.CheckRoleAsync("Reseller");
 
             if (!_context.Categories.Any())
@@ -100,10 +99,10 @@ namespace BookStore.Data
                 await _userHelper.ConfirmEmailAsync(user, token);
 
 
-                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+                var isInRole = await _userHelper.IsUserInRoleAsync(user, "SuperAdmin");
                 if (!isInRole)
                 {
-                    await _userHelper.AddUsertoRoleAsync(user, "Admin");
+                    await _userHelper.AddUsertoRoleAsync(user, "SuperAdmin");
                 }
             }
         }

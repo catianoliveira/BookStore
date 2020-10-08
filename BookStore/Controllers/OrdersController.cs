@@ -1,5 +1,7 @@
 ﻿using BookStore.Data.Repositories;
+using BookStore.Helpers;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -9,57 +11,57 @@ namespace BookStore.Controllers
     public class OrdersController : Controller
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IItemRepository _itemRepository;
+        private readonly IMailHelper _mailHelper;
 
         public OrdersController(
             IOrderRepository orderRepository,
-            IItemRepository itemRepository)
+            IMailHelper mailHelper)
         {
             _orderRepository = orderRepository;
-            _itemRepository = itemRepository;
+            _mailHelper = mailHelper;
         }
-
-
 
         public async Task<IActionResult> Index()
         {
-            var model = await _orderRepository.GetOrdersAsync(this.User.Identity.Name);
-            return View(model);
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                var model = _orderRepository.GetAll();
+                return View(model);
+            }
+
+            else
+            {
+                var model = await _orderRepository.GetOrdersAsync(this.User.Identity.Name);
+                return View(model);
+            }
         }
 
 
         public async Task<IActionResult> Create()
         {
-            var model = await _orderRepository.GetDetailTempsAsync(this.User.Identity.Name);
-            return View(model);
-        }
-
-
-        public IActionResult AddProduct()
-        {
-            var model = new AddItemViewModel
+            if (!User.Identity.IsAuthenticated)
             {
-                Quantity = 1,
-                Items = _itemRepository.GetComboItems()
-            };
-
-            return View(model);
-
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> AddProduct(AddItemViewModel model)
-        {
-            if (this.ModelState.IsValid)
-            {
-                await _orderRepository.AddItemToOrderAsync(model, this.User.Identity.Name);
-                return this.RedirectToAction("Create");
+                return RedirectToAction("Login", "Account");
             }
 
+            try
+            {
+                var model = await _orderRepository.GetDetailTempsAsync(User.Identity.Name);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
-            return this.View(model);
+            return View();
         }
+
 
 
         public async Task<IActionResult> DeleteItem(int? id)
@@ -102,16 +104,29 @@ namespace BookStore.Controllers
         public async Task<IActionResult> ConfirmOrder()
         {
             var response = await _orderRepository.ConfirmOrderAsync(this.User.Identity.Name);
-            if (response)
+            if (response != null)
             {
-                return this.RedirectToAction("Index");
-            }
+                try
+                {
+                    PdfGenerator generator = new PdfGenerator();
 
-            return this.RedirectToAction("Create");
+                    var pdf = generator.CreatePdf(response, User.Identity.Name);
+
+                    _mailHelper.SendMailWithPDF(User.Identity.Name, "Order Confirmation", 
+                        "You can find your order's details in the attachment.", pdf);
+
+                    return View();
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return this.RedirectToAction("Index");
         }
 
 
-
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Deliver(int? id)
         {
             if (id == null)
@@ -141,13 +156,18 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _orderRepository.DeliverOrderAsync(model);
-                return this.RedirectToAction("Index");
+                try
+                {
+                    await _orderRepository.DeliverOrderAsync(model);
+                    return this.RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+
             }
-
-
             return View();
-
         }
     }
 }

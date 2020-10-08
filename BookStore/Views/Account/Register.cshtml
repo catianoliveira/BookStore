@@ -53,14 +53,13 @@
                 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @autocomplete = "on" }))
                 {
                     @Html.ValidationSummary(false)
-                    <div>@Html.ValidationSummary(true, "", new { @style = "color: black" })</div>
 
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
 
                                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-                             || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                            || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                                 {
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <div class="form-group">
@@ -126,7 +125,6 @@
                                     <input asp-for="PhoneNumber" class="form-control" />
                                     <span asp-validation-for="PhoneNumber" class="text-warning"></span>
                                 </div>
-
                             </div>
                         </div>
                     </div>

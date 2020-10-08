@@ -14,5 +14,8 @@ namespace BookStore.Models
         [DisplayName("Order date")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
         public DateTime DeliveryDate { get; set; }
+
+
+
     }
 }

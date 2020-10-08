@@ -17,6 +17,7 @@ namespace BookStore.Data.Repositories
             _context = context;
         }
 
+        
         public IQueryable GetAllWithUsers()
         {
             return _context.Items.Include(p => p.User);
@@ -40,10 +41,20 @@ namespace BookStore.Data.Repositories
             return list;
         }
 
-        public IQueryable GetAllInCategroy(int categoryId)
+        public IQueryable GetInStock()
         {
-            return _context.Categories
-                .Where(c => c.Id == categoryId);
+            var inStock = _context.Items
+                .Where(i => i.IsAvaiable == true);
+
+            return inStock;
+        }
+
+        public IQueryable GetNotInStock()
+        {
+            var notInStock = _context.Items
+                .Where(i => i.IsAvaiable == false);
+
+            return notInStock;
         }
     }
 }

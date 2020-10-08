@@ -22,6 +22,10 @@ namespace BookStore.Data.Entities
 
 
 
+       
+
+
+
         [LessThanDate(ErrorMessage = "Date of birth must be less than today's day")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }

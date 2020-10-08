@@ -36,8 +36,7 @@ namespace BookStore.Models
         public DateTime DateOfBirth { get; set; }
 
 
-
-
+        
 
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters.")]
